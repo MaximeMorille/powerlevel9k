@@ -145,6 +145,17 @@ function +vi-vcs-detect-changes() {
     vcs_visual_identifier='VCS_SVN_ICON'
   fi
 
+  local nbStaged=$(command git diff --cached --name-only | wc -l)
+  local nbUnstaged=$(command git ls-files --modified --exclude-standard "." | wc -l)
+
+  if [[ $nbStaged -ne 0 ]]; then
+    hook_com[staged]=" $(print_icon 'VCS_STAGED_ICON') ${nbStaged}"
+  fi
+  
+  if [[ $nbUnstaged -ne 0 ]]; then
+    hook_com[unstaged]=" $(print_icon 'VCS_UNSTAGED_ICON') ${nbUnstaged}"
+  fi
+
   if [[ -n "${hook_com[staged]}" ]] || [[ -n "${hook_com[unstaged]}" ]]; then
     VCS_WORKDIR_DIRTY=true
   else
