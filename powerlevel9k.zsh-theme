@@ -797,7 +797,7 @@ prompt_dir() {
   # using $PWD instead of "$(print -P '%~')" to allow use of POWERLEVEL9K_DIR_PATH_ABSOLUTE
   local current_path=$PWD # WAS: local current_path="$(print -P '%~')"
   # check if the user wants to use absolute paths or "~" paths
-  [[ ${(L)POWERLEVEL9K_DIR_PATH_ABSOLUTE} != "true" ]] && current_path=${current_path//$HOME/"~"}
+  [[ ${(L)POWERLEVEL9K_DIR_PATH_ABSOLUTE} != "true" ]] && current_path=${current_path//$HOME/" ~"}
   # declare all local variables
   local paths directory test_dir test_dir_length trunc_path threshhold
   # if we are not in "~" or "/", split the paths into an array and exclude "~"
@@ -1571,8 +1571,8 @@ powerlevel9k_vcs_init() {
 
   zstyle ':vcs_info:*' actionformats "%b %F{${POWERLEVEL9K_VCS_ACTIONFORMAT_FOREGROUND}}| %a%f"
 
-  zstyle ':vcs_info:*' stagedstr " $(print_icon 'VCS_STAGED_ICON') $(command git diff --cached --name-only | wc -l)"
-  zstyle ':vcs_info:*' unstagedstr " $(print_icon 'VCS_UNSTAGED_ICON') $(command git ls-files --modified --exclude-standard "." | wc -l)"
+  zstyle ':vcs_info:*' stagedstr " $(print_icon 'VCS_STAGED_ICON') $([ -d "$(pwd)/.git" ] && command git diff --cached --name-only | wc -l)"
+  zstyle ':vcs_info:*' unstagedstr " $(print_icon 'VCS_UNSTAGED_ICON') $([ -d "$(pwd)/.git" ] && command git ls-files --modified --exclude-standard "." | wc -l)"
 
   defined POWERLEVEL9K_VCS_GIT_HOOKS || POWERLEVEL9K_VCS_GIT_HOOKS=(vcs-detect-changes git-untracked git-aheadbehind git-stash git-remotebranch git-tagname)
   zstyle ':vcs_info:git*+set-message:*' hooks $POWERLEVEL9K_VCS_GIT_HOOKS

@@ -23,9 +23,9 @@ function +vi-git-untracked() {
 
   [[ -z $untrackedFiles ]] && return
 
-  local nbFiles=$(echo "$untrackedFiles" | wc -l)
+  local nbFiles=$(command git ls-files --other --directory --exclude-standard "." | wc -l)
 
-  hook_com[unstaged]+=" $(print_icon 'VCS_UNTRACKED_ICON') ${nbFiles}"
+  hook_com[unstaged]+=" %F{025}$(print_icon 'VCS_UNTRACKED_ICON') ${nbFiles}%F{$DEFAULT_COLOR}"
   VCS_WORKDIR_HALF_DIRTY=true
 }
 
@@ -149,11 +149,11 @@ function +vi-vcs-detect-changes() {
   local nbUnstaged=$(command git ls-files --modified --exclude-standard "." | wc -l)
 
   if [[ $nbStaged -ne 0 ]]; then
-    hook_com[staged]=" $(print_icon 'VCS_STAGED_ICON') ${nbStaged}"
+    hook_com[staged]=" %F{028}$(print_icon 'VCS_STAGED_ICON') ${nbStaged}%F{$DEFAULT_COLOR}"
   fi
   
   if [[ $nbUnstaged -ne 0 ]]; then
-    hook_com[unstaged]=" $(print_icon 'VCS_UNSTAGED_ICON') ${nbUnstaged}"
+    hook_com[unstaged]=" %F{088}$(print_icon 'VCS_UNSTAGED_ICON') ${nbUnstaged}%F{$DEFAULT_COLOR}"
   fi
 
   if [[ -n "${hook_com[staged]}" ]] || [[ -n "${hook_com[unstaged]}" ]]; then
